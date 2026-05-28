@@ -1,0 +1,4 @@
+# Core: выбирай любой провайдер
+openai>=1.0.0
+# anthropic>=0.30.0
+# deepseek==1.0.0  # через OpenAI SDK

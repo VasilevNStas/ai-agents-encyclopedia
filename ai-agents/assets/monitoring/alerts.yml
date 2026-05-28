@@ -1,0 +1,85 @@
+# Prometheus alerting rules for AI agent monitoring
+
+groups:
+  - name: ai-agent-alerts
+    interval: 30s
+    rules:
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(agent_errors_total[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Error rate > 5% over 5 minutes"
+          description: "Agent error rate is {{ $value | humanizePercentage }}"
+
+      # High latency
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(llm_latency_seconds_bucket[5m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "P95 latency > 10s"
+          description: "LLM response time is {{ $value }}s at P95"
+
+      # Budget exceeded
+      - alert: DailyBudgetExceeded
+        expr: increase(llm_cost_total[24h]) > 50
+        labels:
+          severity: critical
+        annotations:
+          summary: "Daily cost exceeded $50"
+          description: "Agent spent ${{ $value }} in the last 24h"
+
+      # High guardrail block rate
+      - alert: HighGuardrailBlockRate
+        expr: rate(agent_guardrail_blocks_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Guardrail block rate > 10%"
+          description: "{{ $value }}% of actions blocked by guardrails"
+
+      # Too many tool calls per task
+      - alert: ExcessiveToolCalls
+        expr: rate(agent_tool_calls_total[5m]) > 50
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: ">50 tool calls per minute"
+          description: "Agent is making {{ $value }} tool calls/min"
+
+      # Rate limit hit
+      - alert: RateLimitHit
+        expr: rate(llm_requests_total{status="rate_limited"}[1m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Rate limit reached"
+          description: "Agent hit LLM rate limit. Consider fallback model."
+
+      # ConfigMaps
+      - alert: AgentDown
+        expr: up{job="ai-agent"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Agent is down"
+          description: "AI agent has been unreachable for 1 minute"
+
+      # Token usage spike
+      - alert: TokenUsageSpike
+        expr: rate(llm_tokens_total[5m]) > 100000
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Token usage spike > 100K/min"
+          description: "Agent consuming {{ $value }} tokens/min"

@@ -1,0 +1,44 @@
+# skills/config.yaml — пример конфигурации навыков
+# Этот файл можно загрузить в AGENTS.md как skill_defaults
+
+skill_defaults:
+  # Импортированные skills (из OpenCode Superpowers)
+  brainstorming:
+    temperature: 0.8
+    max_ideas: 5
+    output_format: markdown
+
+  systematic-debugging:
+    max_steps: 15
+    log_level: verbose
+    auto_rollback: true
+
+  writing-plans:
+    detail_level: detailed
+    include_risks: true
+    include_timeline: true
+
+  test-driven-development:
+    framework: pytest
+    coverage_threshold: 80
+    test_path: tests/
+
+  # Кастомные skills (из проекта)
+  prompt-engineer:
+    temperature: 0.0
+    max_length: 2000
+    output_format: markdown
+
+  agent-architect:
+    detail_level: full
+    include_anti_patterns: true
+
+  lesson-creator:
+    include_exercises: true
+    include_questions: true
+    lesson_language: ru
+
+  wiki-maintainer:
+    auto_index: true
+    lint_on_ingest: true
+    compression: smart

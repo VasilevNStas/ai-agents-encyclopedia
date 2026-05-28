@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-agent-config
+  namespace: default
+data:
+  AGENT_NAME: "production-agent"
+  LLM_MODEL: "gpt-4o"
+  LOG_LEVEL: "info"
+  MAX_TOKENS: "128000"
+  VECTOR_DB_URL: "http://qdrant-service:6333"
+  ALLOWED_TOOLS: "read,write,grep,glob,bash,python3"
+  RATE_LIMIT_RPM: "100"
+  DAILY_BUDGET_USD: "50.0"
+  CACHE_TTL_SECONDS: "3600"
+  GUARDRAIL_LEVEL: "strict"

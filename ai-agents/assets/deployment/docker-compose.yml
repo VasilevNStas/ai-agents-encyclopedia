@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY:?required}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o}
+      - AGENT_NAME=${AGENT_NAME:-ai-agent}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - VECTOR_DB_URL=http://qdrant:6333
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    volumes:
+      - ./config:/app/config:ro
+      - agent_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  qdrant:
+    image: qdrant/qdrant:v1.12
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  # Опционально: gateway для LLM-вызовов
+  # portkey-gateway:
+  #   image: portkey/gateway:latest
+  #   ports:
+  #     - "8787:8787"
+  #   environment:
+  #     - PORTKEY_API_KEY=${PORTKEY_API_KEY}
+
+volumes:
+  qdrant_data:
+  agent_data:

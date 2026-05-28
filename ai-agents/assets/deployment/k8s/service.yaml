@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-agent-service
+  namespace: default
+  labels:
+    app: ai-agent
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: ai-agent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-agent-canary-service
+  namespace: default
+  labels:
+    app: ai-agent
+    canary: "true"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: ai-agent
+    canary: "true"

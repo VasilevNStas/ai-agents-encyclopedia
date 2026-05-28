@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=development
+      - LOG_LEVEL=info
+    depends_on:
+      - chroma
+    volumes:
+      - ./src:/app/src
+
+  chroma:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma-data
+    volumes:
+      - chroma_data:/chroma-data
+
+volumes:
+  chroma_data:
