@@ -17,6 +17,15 @@ An Obsidian vault containing three interconnected courses on AI engineering. Eac
 
 Sequential order is recommended, but each course can be taken independently if you have the prerequisites.
 
+### Getting started
+
+1. Clone the repo: `git clone git@github.com:VasilevNStas/ai-agents-encyclopedia.git`
+2. Open the folder in **Obsidian**: *Settings → Manage vaults → Open folder as vault*
+3. Open `index.md` — this is the navigation entry point
+4. Follow `[[WikiLinks]]` — they connect lessons, modules, and courses
+
+That's it. No additional setup required.
+
 ---
 
 ## 📦 Courses overview
